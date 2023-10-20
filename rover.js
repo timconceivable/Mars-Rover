@@ -23,14 +23,22 @@ class Rover {
         };
       }
       if (msgCommands[i].commandType === 'MOVE') {
-        this.position += msgCommands[i].value;
+        let okToMove = true;
+        if (this.mode === 'NORMAL') {
+          this.position = msgCommands[i].value;
+          returnObj.position = this.position;
+        } else okToMove = false;
         resultsArray[i] = {
-          completed: true
+          completed: okToMove,
+          roverStatus: returnObj
         };
       }
       if (msgCommands[i].commandType === 'MODE_CHANGE') {
+        this.mode = msgCommands[i].value;
+        returnObj.mode = this.mode;
         resultsArray[i] = {
-          completed: true
+          completed: true,
+          roverStatus: returnObj
         };
       }
     };
@@ -40,10 +48,5 @@ class Rover {
     }
   }
 }
-
-/* let cmd = [new Command('MODE_CHANGE', 'LOW_POWER'), new Command('STATUS_CHECK')];
-let msg = new Message('Test message', cmd);
-let Rov = new Rover(666);
-console.log(Rov.receiveMessage(msg).results[1].roverStatus.position); */
 
 module.exports = Rover;
