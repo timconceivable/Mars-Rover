@@ -36,7 +36,7 @@ describe("Rover class", function() {
     let rov11 = new Rover(11);
     let modeChange = rov11.receiveMessage(new Message('Mode change', [ new Command('MODE_CHANGE', 'LOW_POWER')])).results[0];
     expect(modeChange.completed).toBe(true);
-    expect(modeChange.roverStatus.mode).toBe('LOW_POWER');
+    expect(rov11.mode).toBe('LOW_POWER');
   });
 
 // TEST 12
@@ -49,7 +49,10 @@ describe("Rover class", function() {
 // TEST 13
   test("responds with the position for the move command", 
   function() {
-    expect(new Rover(13).receiveMessage(new Message('Move', [ new Command('MOVE', 69)])).results[0].roverStatus.position).toBe(69);
+    let rov13 = new Rover(13);
+    // expect(rov13.receiveMessage(new Message('Move', [ new Command('MOVE', 69)])).results[0].roverStatus.position).toBe(69);
+    rov13.receiveMessage(new Message('Move', [ new Command('MOVE', 69)]));
+    expect(rov13.position).toBe(69);
   });
 
 });

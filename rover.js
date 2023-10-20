@@ -10,31 +10,26 @@ class Rover {
   receiveMessage(msgObj) {
     let msgCommands = msgObj.commands;
     let response = [];
-    let returnObj = {
-      mode: this.mode,
-      generatorWatts: this.generatorWatts, 
-      position: this.position
-    }
     for (let i in msgCommands) {
       let complete = true;
       if (msgCommands[i].commandType === 'MOVE') {
         if (this.mode === 'NORMAL') {
           this.position = msgCommands[i].value;
-          returnObj.position = this.position;
         } else complete = false;
-      } else if (msgCommands[i].commandType === 'MODE_CHANGE') {
-        this.mode = msgCommands[i].value;
-        returnObj.mode = this.mode;
       }
-      response[i] = {
-        completed: complete,
-        roverStatus: returnObj
+      if (msgCommands[i].commandType === 'MODE_CHANGE') {
+        this.mode = msgCommands[i].value;
+      }
+      response[i] = { completed: complete };
+      if (msgCommands[i].commandType === 'STATUS_CHECK') {
+        response[i]["roverStatus"] = {
+            position: this.position,
+            mode: this.mode,
+            generatorWatts: this.generatorWatts
+        }
       };
     };
-    return {
-      message: msgObj.name,
-      results: response
-    }
+    return { message: msgObj.name, results: response }
   }
 }
 
