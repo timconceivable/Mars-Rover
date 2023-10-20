@@ -50,7 +50,6 @@ describe("Rover class", function() {
   test("responds with the position for the move command", 
   function() {
     let rov13 = new Rover(13);
-    // expect(rov13.receiveMessage(new Message('Move', [ new Command('MOVE', 69)])).results[0].roverStatus.position).toBe(69);
     rov13.receiveMessage(new Message('Move', [ new Command('MOVE', 69)]));
     expect(rov13.position).toBe(69);
   });
