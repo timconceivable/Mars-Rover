@@ -1,5 +1,6 @@
-// const Command = require('./command.js');
-// const Message = require('./message.js');
+const Command = require('./command.js');
+const Message = require('./message.js');
+
 class Rover {
   constructor(position, mode = 'NORMAL', generatorWatts = 110) {
     this.position = position;
@@ -9,15 +10,16 @@ class Rover {
   receiveMessage(msgObj) {
     let msgCommands = msgObj.commands;
     let resultsArray = [];
+    let returnObj = {
+      mode: this.mode,
+      generatorWatts: this.generatorWatts, 
+      position: this.position
+    }
     for (let i in msgCommands) {
       if (msgCommands[i].commandType === 'STATUS_CHECK') {
         resultsArray[i] = {
           completed: true,
-          roverStatus: {
-            mode: this.mode,
-            generatorWatts: this.generatorWatts, 
-            position: this.position
-          }
+          roverStatus: returnObj
         };
       }
       if (msgCommands[i].commandType === 'MOVE') {
@@ -41,7 +43,7 @@ class Rover {
 
 /* let cmd = [new Command('MODE_CHANGE', 'LOW_POWER'), new Command('STATUS_CHECK')];
 let msg = new Message('Test message', cmd);
-let Rov = new Rover(666666);
-console.log(Rov.receiveMessage(msg) ); //.results.length); */
+let Rov = new Rover(666);
+console.log(Rov.receiveMessage(msg).results[1].roverStatus.position); */
 
 module.exports = Rover;

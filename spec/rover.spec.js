@@ -10,13 +10,13 @@ describe("Rover class", function() {
 
   // 7 tests here!
   test("constructor sets position and default values for mode and generatorWatts", function() {
-    expect(new Rover(666666).position).toBe(666666);
-    expect(new Rover(666666).mode).toBe('NORMAL');
-    expect(new Rover(666666).generatorWatts).toBe(110);
+    expect(new Rover(666).position).toBe(666);
+    expect(new Rover(666).mode).toBe('NORMAL');
+    expect(new Rover(666).generatorWatts).toBe(110);
   });
   let cmd = [new Command('MODE_CHANGE', 'LOW_POWER'), new Command('STATUS_CHECK')];
   let msg = new Message('Test message', cmd);
-  let Rov = new Rover(666666);
+  let Rov = new Rover(111);
 
   test("response returned by receiveMessage contains the name of the message", function() {  
     expect(Rov.receiveMessage(msg).message).toBe('Test message');
@@ -25,5 +25,16 @@ describe("Rover class", function() {
   test("response returned by receiveMessage includes two results if two commands are sent in the message", function() {
     expect(Rov.receiveMessage(msg).results.length).toEqual(2);
   });
-  // console.log(Rov.receiveMessage(msg));
+
+  let cmd2 = [new Command('STATUS_CHECK')];
+  let msg2 = new Message('Test message', cmd2);
+  let Rov2 = new Rover(222);
+  let result2 = Rov2.receiveMessage(msg2).results[0].roverStatus;
+  test("responds correctly to the status check command", 
+  function() {
+    expect(result2.position).toBe(222);
+    expect(result2.mode).toBe('NORMAL');
+    expect(result2.generatorWatts).toBe(110);
+  });
+
 });
